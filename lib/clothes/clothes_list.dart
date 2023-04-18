@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'clothes_detail.dart';
 
-class PictureList extends StatelessWidget {
+class ClothesPictureList extends StatelessWidget {
   final List<String> images = [
     'https://picsum.photos/id/1018/250/250',
     'https://picsum.photos/id/1025/250/250',
@@ -26,49 +26,12 @@ class PictureList extends StatelessWidget {
     );
   }
 
-  void _showForm(BuildContext context, String imageUrl) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Enter your information'),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Submit form data here
-                  },
-                  child: Text('Submit'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // Number of columns in the grid
           crossAxisSpacing: 10.0, // Spacing between columns
           mainAxisSpacing: 10.0, // Spacing between rows

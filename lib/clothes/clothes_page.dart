@@ -11,6 +11,13 @@ class ClothesPage extends StatefulWidget {
 class _ClothesPageState extends State<ClothesPage> {
   int _selectedIndex = 0;
   bool _isSideNavOpen = false;
+  final List<String> _clothesCategory = [
+    "Tops",
+    "Bottoms",
+    "One-piece",
+    "Shoes",
+    "Accessory"
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -24,75 +31,82 @@ class _ClothesPageState extends State<ClothesPage> {
     });
   }
 
-  List<Widget> _widgetOptions = <Widget>[
-    PictureList(),
-    PictureList(),
-    PictureList(),
-    PictureList()
+  final List<Widget> _widgetOptions = <Widget>[
+    ClothesPictureList(),
+    ClothesPictureList(),
+    ClothesPictureList(),
+    ClothesPictureList(),
+    ClothesPictureList()
   ];
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clothes'),
+        title: Text(_clothesCategory[_selectedIndex]),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: _toggleSideNav,
         ),
       ),
-      body: Row(
+      body: Stack(
         children: <Widget>[
+          Container(
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
           if (_isSideNavOpen)
-            Expanded(
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 250),
-                width: _isSideNavOpen ? 200.0 : 0.0,
-                child: Drawer(
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        title: Text('Tops'),
-                        onTap: () {
-                          _onItemTapped(0);
-                          _toggleSideNav();
-                        },
-                        selected: _selectedIndex == 0,
-                      ),
-                      ListTile(
-                        title: Text('Bottoms'),
-                        onTap: () {
-                          _onItemTapped(1);
-                          _toggleSideNav();
-                        },
-                        selected: _selectedIndex == 1,
-                      ),
-                      ListTile(
-                        title: Text('One-piece'),
-                        onTap: () {
-                          _onItemTapped(2);
-                          _toggleSideNav();
-                        },
-                        selected: _selectedIndex == 2,
-                      ),
-                      ListTile(
-                        title: Text('Accessory'),
-                        onTap: () {
-                          _onItemTapped(3);
-                          _toggleSideNav();
-                        },
-                        selected: _selectedIndex == 3,
-                      ),
-                    ],
-                  ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 150, // 设置父部件的最大宽度
+                maxHeight: 300, // 设置父部件的最大高度
+              ),
+              child: Drawer(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      title: Text(_clothesCategory[0]),
+                      onTap: () {
+                        _onItemTapped(0);
+                        _toggleSideNav();
+                      },
+                      selected: _selectedIndex == 0,
+                    ),
+                    ListTile(
+                      title: Text(_clothesCategory[1]),
+                      onTap: () {
+                        _onItemTapped(1);
+                        _toggleSideNav();
+                      },
+                      selected: _selectedIndex == 1,
+                    ),
+                    ListTile(
+                      title: Text(_clothesCategory[2]),
+                      onTap: () {
+                        _onItemTapped(2);
+                        _toggleSideNav();
+                      },
+                      selected: _selectedIndex == 2,
+                    ),
+                    ListTile(
+                      title: Text(_clothesCategory[3]),
+                      onTap: () {
+                        _onItemTapped(3);
+                        _toggleSideNav();
+                      },
+                      selected: _selectedIndex == 3,
+                    ),
+                    ListTile(
+                      title: Text(_clothesCategory[4]),
+                      onTap: () {
+                        _onItemTapped(4);
+                        _toggleSideNav();
+                      },
+                      selected: _selectedIndex == 4,
+                    ),
+                  ],
                 ),
               ),
             ),
-          Expanded(
-            flex: 2,
-            child: _widgetOptions.elementAt(_selectedIndex),
-          ),
         ],
       ),
     );
