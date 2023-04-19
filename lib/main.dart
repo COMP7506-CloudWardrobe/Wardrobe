@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-import 'account/login_page.dart';
-import 'package:provider/provider.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
-import 'data/UserModel.dart';
-
+import 'page/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
-  final db = mongo.Db('mongodb://localhost:27017/mydb');
-  await db.open();
-
-  runApp(MultiProvider(
-    providers: [
-      Provider<mongo.Db>.value(value: db),
-      ChangeNotifierProvider(create: (_) => UserModel(db)),
-    ],
-    child: MyApp(),
-  ),);
+  SharedPreferences.setMockInitialValues({});
+  runApp(MyApp());
 
 }
 

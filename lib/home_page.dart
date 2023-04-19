@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'account/User.dart';
+import 'model/User.dart';
 import 'clothes/clothes_page.dart';
-import 'suit/suit_page.dart';
-import 'insight/insight_page.dart';
-import 'profile/profile_page.dart';
+import '/suit/suit_page.dart';
+import '/insight/insight_page.dart';
+import '../page/profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   final User user;

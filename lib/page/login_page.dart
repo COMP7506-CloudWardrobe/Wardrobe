@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wardrobe/home_page.dart';
-import 'User.dart';
-
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import '../model/User.dart';
+import '../dao/user_dao.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +18,20 @@ class _LoginPageState extends State<LoginPage> {
   bool isEmail(String input) {
     final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return regex.hasMatch(input);
+  }
+
+  void _submit() {
+    if(_formKey.currentState!.validate()) {
+      UserDao.login(_email, _password).then((result) {
+        // 如果登录成功，则跳转到主页并传递用户凭据
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(user: result),
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -78,29 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Row(children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        //async
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-
-                          User user = User(
-                            id: '',
-                            email: _email,
-                            password: _password,
-                          );
-
-                          // 发送用户登录信息到后端服务器
-                          // 等待服务器响应并进行相应的处理
-
-                          // 如果登录成功，则跳转到主页并传递用户凭据
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(user: user),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: _submit,
                       child: Text('登录'),
                     ),
                   ),
