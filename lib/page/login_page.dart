@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
+  String _email = '123';
   String _password = '';
 
   bool isEmail(String input) {
@@ -24,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
     if(_formKey.currentState!.validate()) {
       UserDao.login(_email, _password).then((result) {
         // 如果登录成功，则跳转到主页并传递用户凭据
+        print("-------test--------");
+        // print(_email);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -61,6 +63,9 @@ class _LoginPageState extends State<LoginPage> {
                   }
                   return null;
                 },
+                onChanged: (value) {
+                  _email = value;
+                },
                 onSaved: (value) {
                   _email = value!;
                 },
@@ -79,6 +84,9 @@ class _LoginPageState extends State<LoginPage> {
                     return '密码长度应为6位或以上';
                   }
                   return null;
+                },
+                onChanged: (value) {
+                  _password = value;
                 },
                 onSaved: (value) {
                   _password = value!;
