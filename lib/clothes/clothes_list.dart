@@ -14,7 +14,7 @@ class ClothesPictureList extends StatelessWidget {
     'https://picsum.photos/id/110/250/250',
     'https://picsum.photos/id/111/250/250',
     'https://picsum.photos/id/112/250/250',
-    'https://picsum.photos/id/113/250/250',
+    'http://localhost:8080/get_clothes_image?userId=1&clothesId=8',
   ];
 
   void _showPictureDetail(BuildContext context, String imageUrl) {

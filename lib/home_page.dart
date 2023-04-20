@@ -4,6 +4,7 @@ import 'clothes/clothes_page.dart';
 import '/suit/suit_page.dart';
 import '/insight/insight_page.dart';
 import '../page/profile/profile_page.dart';
+import 'package:wardrobe/dao/clothes_dao.dart' ;
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    ClothesDao.getAllClothes(1);
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
