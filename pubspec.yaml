@@ -30,10 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # latest version
+  dio: ^5.1.1
 
-  mongo_dart: ^0.9.1
+  fluttertoast: ^8.0.7
 
   provider: ^6.0.1
+  shared_preferences: ^2.0.8
 
 
 
