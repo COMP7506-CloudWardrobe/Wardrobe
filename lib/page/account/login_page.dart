@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wardrobe/home_page.dart';
-import '../model/User.dart';
-import '../dao/user_dao.dart';
+import '../../dao/user_dao.dart';
+import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,8 +25,12 @@ class _LoginPageState extends State<LoginPage> {
     if(_formKey.currentState!.validate()) {
       UserDao.login(_email, _password).then((result) {
         // 如果登录成功，则跳转到主页并传递用户凭据
-        print("-------test--------");
+        // print("-------test--------");
         // print(_email);
+        Fluttertoast.showToast(
+            msg: '登录成功！',
+            gravity: ToastGravity.CENTER,
+            textColor: Colors.grey);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -34,6 +39,15 @@ class _LoginPageState extends State<LoginPage> {
         );
       });
     }
+  }
+
+  void _signup() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPage(),
+      ),
+    );
   }
 
   @override
@@ -101,6 +115,19 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: _submit,
                       child: Text('登录'),
+                    ),
+                  ),
+                ]),
+              ),
+              SizedBox(height: 16.0),
+              // ...
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Row(children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _signup,
+                      child: Text('注册'),
                     ),
                   ),
                 ]),
