@@ -1,8 +1,8 @@
 class Clothes {
-  int? id;
-  int? type;
+  int id;
+  int type;
 
-  Clothes({this.id, this.type});
+  Clothes({required this.id, required this.type});
 
   factory Clothes.fromJson(Map<String, dynamic> json) {
     return Clothes(

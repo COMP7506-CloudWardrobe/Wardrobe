@@ -1,12 +1,12 @@
 class User {
-  int? id;
+  int id;
   String? email;
   String? password;
   String? userName;
   String? userToken;
 
   User({
-    this.id,
+    required this.id,
     this.email,
     this.password,
     this.userName,

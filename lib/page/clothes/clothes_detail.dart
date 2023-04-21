@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../model/Clothes.dart';
+import '../../store.dart';
 import 'clothes_page.dart';
+import 'package:wardrobe/dao/clothes_dao.dart';
 
 class ClothesDetailPage extends StatefulWidget {
   final String imageUrl;
+  final Clothes clothes;
+  final int userId;
 
-  const ClothesDetailPage({super.key, required this.imageUrl});
+  const ClothesDetailPage(
+      {super.key,
+      required this.imageUrl,
+      required this.clothes,
+      required this.userId});
 
   @override
   State<ClothesDetailPage> createState() => _ClothesDetailPageState();
@@ -12,7 +22,7 @@ class ClothesDetailPage extends StatefulWidget {
 
 class _ClothesDetailPageState extends State<ClothesDetailPage> {
   int _modified = 0;
-  final List<String> _buttonLabels = ["Modify", "Submit"];
+  final List<String> _buttonLabels = ["Modify", "Delete"];
 
   void _toggleModify() {
     setState(() {
@@ -66,6 +76,14 @@ class _ClothesDetailPageState extends State<ClothesDetailPage> {
                   ElevatedButton(
                     onPressed: () {
                       _toggleModify();
+                      if (_modified == 1) {
+                        print("delete");
+                        Provider.of<StoreProvider>(context, listen: false)
+                            .deleteClothes(widget.clothes);
+                        // ClothesDao.deleteClothes(
+                        //     widget.userId, widget.clothes.id);
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text(_buttonLabels[_modified]),
                   ),

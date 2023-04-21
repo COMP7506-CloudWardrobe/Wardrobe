@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wardrobe/model/ClothesWardrobe.dart';
+import 'package:wardrobe/store.dart';
+import '../../model/User.dart';
 import 'clothes_list.dart';
 
 class ClothesPage extends StatefulWidget {
@@ -11,6 +15,13 @@ class ClothesPage extends StatefulWidget {
 class _ClothesPageState extends State<ClothesPage> {
   int _selectedIndex = 0;
   bool _isSideNavOpen = false;
+
+  // late ClothesWardrobe _wardrobe;
+
+  late User _user;
+
+  late List<Widget> _widgetOptions;
+
   final List<String> _clothesCategory = [
     "Tops",
     "Bottoms",
@@ -31,16 +42,20 @@ class _ClothesPageState extends State<ClothesPage> {
     });
   }
 
-  final List<Widget> _widgetOptions = <Widget>[
-    ClothesPictureList(),
-    ClothesPictureList(),
-    ClothesPictureList(),
-    ClothesPictureList(),
-    ClothesPictureList()
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // _wardrobe =
+    //     Provider.of<StoreProvider>(context, listen: true).clothesWardrobe;
+    _user = Provider.of<StoreProvider>(context, listen: false).user;
+
+    _widgetOptions = [
+      ClothesPictureList(clothesType: 0, userId: _user.id),
+      ClothesPictureList(clothesType: 1, userId: _user.id),
+      ClothesPictureList(clothesType: 2, userId: _user.id),
+      ClothesPictureList(clothesType: 3, userId: _user.id),
+      ClothesPictureList(clothesType: 4, userId: _user.id)
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_clothesCategory[_selectedIndex]),

@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wardrobe/home_page.dart';
 import 'package:wardrobe/store.dart';
+import '../../dao/clothes_dao.dart';
 import '../../dao/user_dao.dart';
 import 'signup_page.dart';
 
@@ -65,23 +66,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _submit() {
-    if(_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       UserDao.login(_email, _password).then((result) {
         // 如果登录成功，则跳转到主页并传递用户凭据
         // print("-------test--------");
         // print(_email);
         Provider.of<StoreProvider>(context, listen: false).setUser(result);
 
-        Fluttertoast.showToast(
-            msg: '登录成功！',
-            gravity: ToastGravity.CENTER,
-            textColor: Colors.grey);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(user: result),
-          ),
-        );
+        ClothesDao.getAllClothes(result.id).then((clothesWardrobe) {
+          Provider.of<StoreProvider>(context, listen: false)
+              .setClothesWardrobe(clothesWardrobe);
+
+          Fluttertoast.showToast(
+              msg: '登录成功！',
+              gravity: ToastGravity.CENTER,
+              textColor: Colors.grey);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(user: result),
+            ),
+          );
+        });
       });
     }
   }
@@ -97,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // ...
       body: Padding(
