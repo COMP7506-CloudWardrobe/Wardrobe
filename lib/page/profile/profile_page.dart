@@ -7,59 +7,119 @@ import 'package:wardrobe/model/User.dart';
 import 'package:wardrobe/store.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../account/login_page.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  File? _selectedImage;
-
   @override
-  void initState() {
-    super.initState();
-    // _requestPermissions();
-    _selectedImage = null;
+
+  void _logout() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
   }
 
-  Future<void> _selectImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-    }
+  void _settings() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
   }
 
-  Future<void> _requestPermissions() async {
-    final status = await Permission.photos.request();
-    if (status.isGranted) {
-      print('Permission granted');
-    } else if (status.isDenied) {
-      print('Permission denied');
-    } else if (status.isPermanentlyDenied) {
-      print('Permission permanently denied');
-      bool isOpened = await openAppSettings();
-      print('App Settings opened: ' + isOpened.toString());
-    }
+  void _invite_friends() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
   }
 
-  @override
+  void _notifications() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
+  }
+
+  void _account_information() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Picker Demo'),
-      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (_selectedImage != null) Image.file(_selectedImage!),
-          ElevatedButton(
-            onPressed: _selectImage,
-            child: Text('Select Image'),
+          Container(
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('assets/images/girl_profile1.jpg'),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Jessica Maria',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'jessica_maria@example.com',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: ListView(
+              children: [
+                _buildButton(context, 'Account Information', _account_information),
+                _buildButton(context, 'Notifications', _notifications),
+                _buildButton(context, 'Invite Friends', _invite_friends),
+                _buildButton(context, 'Settings', _settings),
+                _buildButton(context, 'Log Out', _logout),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, String title, VoidCallback onPressed) {
+    return Container(
+      height: 50,
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(title),
       ),
     );
   }
