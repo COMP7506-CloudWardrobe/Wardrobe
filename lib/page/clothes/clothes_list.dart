@@ -1,34 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../model/Clothes.dart';
+import '../../store.dart';
 import 'clothes_detail.dart';
 
-class ClothesPictureList extends StatelessWidget {
-  final List<String> images = [
-    'https://picsum.photos/id/1018/250/250',
-    'https://picsum.photos/id/1025/250/250',
-    'https://picsum.photos/id/1041/250/250',
-    'https://picsum.photos/id/1050/250/250',
-    'https://picsum.photos/id/1060/250/250',
-    'https://picsum.photos/id/1074/250/250',
-    'https://picsum.photos/id/1080/250/250',
-    'https://picsum.photos/id/109/250/250',
-    'https://picsum.photos/id/110/250/250',
-    'https://picsum.photos/id/111/250/250',
-    'https://picsum.photos/id/112/250/250',
-    'http://localhost:8080/get_clothes_image?userId=1&clothesId=8',
-  ];
+class ClothesPictureList extends StatefulWidget {
+  @override
+  State<ClothesPictureList> createState() => _ClothesPictureListState();
 
-  void _showPictureDetail(BuildContext context, String imageUrl) {
+  int clothesType;
+
+  int userId;
+
+  ClothesPictureList(
+      {super.key, required this.clothesType, required this.userId});
+}
+
+class _ClothesPictureListState extends State<ClothesPictureList> {
+  late List<Clothes> _clothesList;
+
+  late List<String> images;
+
+  // late List<String> images = [
+  //   'https://picsum.photos/id/1018/250/250',
+  //   'https://picsum.photos/id/1025/250/250',
+  //   'https://picsum.photos/id/1041/250/250',
+  //   'https://picsum.photos/id/1050/250/250',
+  //   'https://picsum.photos/id/1060/250/250',
+  //   'https://picsum.photos/id/1074/250/250',
+  //   'https://picsum.photos/id/1080/250/250',
+  //   'https://picsum.photos/id/109/250/250',
+  //   'https://picsum.photos/id/110/250/250',
+  //   'https://picsum.photos/id/111/250/250',
+  //   'https://picsum.photos/id/112/250/250',
+  //   'http://localhost:8080/get_clothes_image?userId=1&clothesId=8',
+  // ];
+
+  void _showPictureDetail(
+      BuildContext context, String imageUrl, Clothes clothes) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ClothesDetailPage(imageUrl: imageUrl),
+        builder: (context) => ClothesDetailPage(
+          imageUrl: imageUrl,
+          clothes: clothes,
+          userId: widget.userId,
+        ),
       ),
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
+    _clothesList = Provider.of<StoreProvider>(context, listen: true)
+        .getClothesList(widget.clothesType)!;
+
+    images = _clothesList
+        .map((Clothes e) =>
+            'http://localhost:8080/get_clothes_image?userId=${widget.userId}&clothesId=${e.id}')
+        .toList();
+
     return Scaffold(
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -40,7 +71,8 @@ class ClothesPictureList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-              _showPictureDetail(context, images[index]);
+              print(index);
+              _showPictureDetail(context, images[index], _clothesList[index]);
               // ClothesDetailPage(imageUrl: images[index]);
               // _showForm(context, images[index]);
             },
