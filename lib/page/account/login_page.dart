@@ -79,26 +79,26 @@ class _LoginPageState extends State<LoginPage> {
         ClothesDao.getAllClothes(user.id).then((clothesWardrobe) {
           Provider.of<StoreProvider>(context, listen: false)
               .setClothesWardrobe(clothesWardrobe);
+
+          // 3. get all suits
+          SuitDao.getAllSuits(user.id).then((suitList) {
+            Provider.of<StoreProvider>(context, listen: false)
+                .setSuitList(suitList);
+            print(suitList);
+
+            Fluttertoast.showToast(
+                msg: '登录成功！',
+                gravity: ToastGravity.CENTER,
+                textColor: Colors.grey);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(user: user),
+              ),
+            );
+          });
         });
-
-        // 3. get all suits
-        SuitDao.getAllSuits(user.id).then((suitList) {
-          Provider.of<StoreProvider>(context, listen: false)
-              .setSuitList(suitList);
-          print(suitList);
-        });
-
-      }).then((res) {
-        // 4. go to home page
-        Fluttertoast.showToast(
-            msg: '登录成功！', gravity: ToastGravity.CENTER, textColor: Colors.grey);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(user: user),
-          ),
-        );
       });
     }
   }
