@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:wardrobe/store.dart';
 import 'page/account/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 void main() async{
   SharedPreferences.setMockInitialValues({});
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => StoreProvider()),
+        ],
+        child: MyApp()
+    )
+
+  );
 
 }
 

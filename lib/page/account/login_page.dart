@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:wardrobe/home_page.dart';
+import 'package:wardrobe/store.dart';
 import '../../dao/user_dao.dart';
 import 'signup_page.dart';
 
@@ -27,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
         // 如果登录成功，则跳转到主页并传递用户凭据
         // print("-------test--------");
         // print(_email);
+        Provider.of<StoreProvider>(context, listen: false).setUser(result);
+
         Fluttertoast.showToast(
             msg: '登录成功！',
             gravity: ToastGravity.CENTER,
