@@ -25,6 +25,7 @@ class ClothesDao {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
 
+
         ClothesWardrobe allClothes = ClothesWardrobe(
             tops: data['tops'] == null
                 ? []
