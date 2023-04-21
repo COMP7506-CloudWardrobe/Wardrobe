@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:wardrobe/home_page.dart';
 import 'package:wardrobe/store.dart';
@@ -17,6 +18,46 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '123';
   String _password = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // _requestPermissions();
+  }
+
+  Future<void> _requestPermissions() async {
+    final status = await Permission.manageExternalStorage.request();
+    if (status.isGranted) {
+      print('Permission granted');
+    } else {
+      print('Permission denied');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('存储权限被拒绝'),
+            content: Text('需要存储权限以使用此应用程序的所有功能'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('授权'),
+                onPressed: () async {
+                  openAppSettings();
+                  Navigator.of(context).pop();
+                  _requestPermissions();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   bool isEmail(String input) {
     final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
