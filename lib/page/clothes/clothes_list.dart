@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../model/Clothes.dart';
 import '../../store.dart';
+import '../../utils/url.dart';
 import 'clothes_detail.dart';
 
 class ClothesPictureList extends StatefulWidget {
   @override
   State<ClothesPictureList> createState() => _ClothesPictureListState();
+
+  String getClothesImageURL = '/get_clothes_image';
+
+  String userIdParam = 'userId';
+
+  String clothesIdParam = 'clothesId';
 
   int clothesType;
 
@@ -56,8 +63,9 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
         .getClothesList(widget.clothesType)!;
 
     images = _clothesList
-        .map((Clothes e) =>
-            'http://localhost:8080/get_clothes_image?userId=${widget.userId}&clothesId=${e.id}')
+        .map((Clothes clothes) => '$baseURL${widget.getClothesImageURL}'
+            '?${widget.userIdParam}=${widget.userId}'
+            '&${widget.clothesIdParam}=${clothes.id}')
         .toList();
 
     return Scaffold(

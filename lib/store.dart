@@ -3,6 +3,8 @@ import 'package:wardrobe/model/ClothesWardrobe.dart';
 import 'package:wardrobe/model/User.dart';
 import 'package:wardrobe/model/Clothes.dart';
 
+import 'model/Suit.dart';
+
 // 存储全局变量的provider，现在只有存储登录后的用户信息
 class StoreProvider with ChangeNotifier {
   late User _user;
@@ -13,6 +15,10 @@ class StoreProvider with ChangeNotifier {
 
   ClothesWardrobe get clothesWardrobe => _clothesWardrobe;
 
+  late List<Suit> _suitList;
+
+  List<Suit> get suitList => _suitList;
+
   void setUser(User user) {
     _user = user;
     notifyListeners();
@@ -21,6 +27,12 @@ class StoreProvider with ChangeNotifier {
   void setClothesWardrobe(ClothesWardrobe clothesWardrobe) {
     _clothesWardrobe = clothesWardrobe;
     print(_clothesWardrobe);
+    notifyListeners();
+  }
+
+  void setSuitList(List<Suit> suitList) {
+    _suitList = suitList;
+    print(_suitList);
     notifyListeners();
   }
 
@@ -38,6 +50,10 @@ class StoreProvider with ChangeNotifier {
         return _clothesWardrobe.accessories;
     }
     return null;
+  }
+
+  List<Suit> getSuitList() {
+    return _suitList;
   }
 
   void addClothes(Clothes clothes) {
