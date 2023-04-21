@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 import '../../dao/user_dao.dart';
 import '../../home_page.dart';
+import '../../store.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -21,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
       _formKey.currentState!.save();
       // Perform registration logic with _username, _email, and _password
       UserDao.register(_username, _email, _password).then((user) {
+        Provider.of<StoreProvider>(context, listen: false).setUser(user);
         Fluttertoast.showToast(
             msg: '登录成功！',
             gravity: ToastGravity.CENTER,
