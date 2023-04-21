@@ -6,7 +6,7 @@ import '../../model/User.dart';
 import 'clothes_list.dart';
 
 class ClothesPage extends StatefulWidget {
-  // const ClothesPage({super.key});
+  ClothesPage({super.key});
 
   @override
   State<ClothesPage> createState() => _ClothesPageState();
@@ -29,6 +29,12 @@ class _ClothesPageState extends State<ClothesPage> {
     "Shoes",
     "Accessory"
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // _requestPermissions();
+  }
 
   void _onItemTapped(int index) {
     setState(() {

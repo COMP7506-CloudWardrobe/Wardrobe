@@ -34,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       print('Permission granted');
     } else {
       print('Permission denied');
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {

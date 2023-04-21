@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:wardrobe/page/clothes/cloth_tag.dart';
 import '../../model/Clothes.dart';
 import '../../store.dart';
 import '../../utils/url.dart';
@@ -42,6 +47,36 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
   //   'https://picsum.photos/id/112/250/250',
   //   'http://localhost:8080/get_clothes_image?userId=1&clothesId=8',
   // ];
+
+  late File _image;
+
+  @override
+  void initState() {
+    super.initState();
+    // _requestPermissions();
+    // _image = null;
+  }
+
+  Future<void> _selectImage() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        print(pickedFile.path);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ClothTagPage(
+              image: _image,
+              userId: widget.userId
+            ),
+          ),
+        );
+    }
+  }
+
+
 
   void _showPictureDetail(
       BuildContext context, String imageUrl, Clothes clothes) {
@@ -92,10 +127,8 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Handle add button tap here
-        },
-        child: Icon(Icons.add),
+        onPressed: _selectImage,
+        child: Icon(Icons.camera_alt),
         backgroundColor: Colors.blue,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,

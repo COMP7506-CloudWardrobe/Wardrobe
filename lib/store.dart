@@ -24,7 +24,7 @@ class StoreProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setClothesWardrobe(ClothesWardrobe clothesWardrobe) {
+  void setClothesWardrobe(ClothesWardrobe clothesWardrobe) async{
     _clothesWardrobe = clothesWardrobe;
     print(_clothesWardrobe);
     notifyListeners();
