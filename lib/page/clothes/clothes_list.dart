@@ -24,8 +24,13 @@ class ClothesPictureList extends StatefulWidget {
 
   int userId;
 
+  int selectedIndex;
+
   ClothesPictureList(
-      {super.key, required this.clothesType, required this.userId});
+      {super.key,
+      required this.clothesType,
+      required this.userId,
+      required this.selectedIndex});
 }
 
 class _ClothesPictureListState extends State<ClothesPictureList> {
@@ -58,25 +63,25 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
   }
 
   Future<void> _selectImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        print(pickedFile.path);
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ClothTagPage(
-              image: _image,
-              userId: widget.userId
-            ),
+      _image = File(pickedFile.path);
+      print(pickedFile.path);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ClothTagPage(
+            image: _image,
+            userId: widget.userId,
+            selectedIndex: widget.selectedIndex,
           ),
-        );
+        ),
+      );
     }
   }
-
-
 
   void _showPictureDetail(
       BuildContext context, String imageUrl, Clothes clothes) {

@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
@@ -39,8 +40,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      ClothesPage(),
-      SuitPage(),
+      ClothesPage(
+        selectedIndex: 0,
+      ),
+      SuitPage(userId: widget.user.id),
       InsightPage(),
       ProfilePage(),
     ];

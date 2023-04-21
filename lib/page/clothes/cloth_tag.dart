@@ -1,12 +1,13 @@
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wardrobe/dao/wardrobe_dao.dart';
 import 'package:wardrobe/page/clothes/clothes_list.dart';
 
+import '../../store.dart';
 import 'clothes_page.dart';
 
 class ClothTagPage extends StatefulWidget {
@@ -14,7 +15,13 @@ class ClothTagPage extends StatefulWidget {
 
   int userId;
 
-  ClothTagPage({super.key, required this.image, required this.userId});
+  int selectedIndex;
+
+  ClothTagPage(
+      {super.key,
+      required this.image,
+      required this.userId,
+      required this.selectedIndex});
 
   @override
   State<ClothTagPage> createState() => _ClothTagPageState();
@@ -27,17 +34,12 @@ class _ClothTagPageState extends State<ClothTagPage> {
   void _upload() {
     print('--------upload--------');
     // print(type);
-    WardrobeDao.uploadClothes(widget.image, widget.userId, type).then((result) => {
-      if(result) {
-        Navigator.pushReplacement(
-          context,
-            MaterialPageRoute(
-              builder: (context) => ClothesPage(),
-          ),
-        )
-      }
-    }
-    );
+    WardrobeDao.uploadClothes(widget.image, widget.userId, type)
+        .then((result) => {
+              Provider.of<StoreProvider>(context, listen: false)
+                  .addClothes(result),
+              Navigator.pop(context)
+            });
   }
 
   @override
@@ -67,7 +69,7 @@ class _ClothTagPageState extends State<ClothTagPage> {
                 const Text('Type'),
                 const SizedBox(width: 16),
                 Expanded(
-                  child:  DropdownButton<int>(
+                  child: DropdownButton<int>(
                     value: type,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
