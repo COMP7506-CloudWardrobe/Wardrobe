@@ -37,16 +37,18 @@ class _SuitPictureListState extends State<SuitPictureList> {
                   fit: BoxFit.scaleDown, // 图像填充方式
                 ),
               )),
-          ElevatedButton(
-            onPressed: () {
-              print("delete");
-              Provider.of<StoreProvider>(context, listen: false)
-                  .deleteSuit(suit);
-              SuitDao.deleteSuit(widget.userId, suit.suitId);
-              Navigator.pop(context);
-            },
-            child: Text('Delete'),
-          ),
+          TextButton(
+              onPressed: () {
+                Provider.of<StoreProvider>(context, listen: false)
+                    .deleteSuit(suit);
+                SuitDao.deleteSuit(widget.userId, suit.suitId);
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                  foregroundColor: gold,
+                  textStyle: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
+              child: const Text('Delete')),
           const SizedBox(height: 10.0),
         ]);
       },

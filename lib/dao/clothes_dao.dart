@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../utils/color.dart';
 import '../utils/file_to_multipart.dart';
 import '../utils/url.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -85,6 +86,13 @@ class ClothesDao {
       if (response.statusCode == 200) {
         // 请求成功，解析返回的数据
         // print("-------test------");
+        Fluttertoast.showToast(
+            msg: 'Upload successfully!',
+            gravity: ToastGravity.CENTER,
+            textColor: gold,
+            backgroundColor: Colors.white,
+        );
+
         if (response.data == null) {
           Fluttertoast.showToast(
               msg: '上传失败！',
@@ -120,9 +128,10 @@ class ClothesDao {
 
       if (response.statusCode == 200) {
         Fluttertoast.showToast(
-            msg: 'Delete successfully.',
+            msg: 'Delete successfully!',
             gravity: ToastGravity.CENTER,
-            textColor: Colors.grey);
+            textColor: gold,
+            backgroundColor: Colors.white);
       } else {
         // 请求失败，抛出异常
         throw Exception('请求失败');

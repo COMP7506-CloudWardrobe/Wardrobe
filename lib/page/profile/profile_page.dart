@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  @override
+  late User _user;
 
   void _logout() {
     Navigator.pushReplacement(
@@ -62,7 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
+    _user = Provider.of<StoreProvider>(context, listen: false).user;
+
     return Scaffold(
       body: Column(
         children: [
@@ -73,11 +76,11 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: AssetImage('assets/images/girl_profile1.jpg'),
+                  backgroundImage: AssetImage('assets/images/login.png'),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Jessica Maria',
+                  '${_user.userName}',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -86,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  'jessica_maria@example.com',
+                  '${_user.email}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
@@ -100,7 +103,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: ListView(
               children: [
-                _buildButton(context, 'Account Information', _account_information),
+                _buildButton(
+                    context, 'Account Information', _account_information),
                 _buildButton(context, 'Notifications', _notifications),
                 _buildButton(context, 'Invite Friends', _invite_friends),
                 _buildButton(context, 'Settings', _settings),
@@ -113,7 +117,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildButton(BuildContext context, String title, VoidCallback onPressed) {
+  Widget _buildButton(
+      BuildContext context, String title, VoidCallback onPressed) {
     return Container(
       height: 50,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -124,4 +129,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-

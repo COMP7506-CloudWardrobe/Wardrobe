@@ -89,9 +89,10 @@ class _LoginPageState extends State<LoginPage> {
             print(suitList);
 
             Fluttertoast.showToast(
-                msg: '登录成功！',
+                msg: 'Hello ${user.userName}!',
                 gravity: ToastGravity.CENTER,
-                textColor: Colors.grey);
+                textColor: gold,
+                backgroundColor: Colors.white);
 
             Navigator.pushReplacement(
               context,
@@ -156,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text('Email Address'),
+                const Text('Email'),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   // decoration: const InputDecoration(
@@ -164,9 +165,9 @@ class _LoginPageState extends State<LoginPage> {
                   // ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please input your email address.';
+                      return 'Please input your email.';
                     } else if (!isEmail(value)) {
-                      return 'Email address incorrect!';
+                      return 'Email incorrect!';
                     }
                     return null;
                   },
@@ -215,16 +216,16 @@ class _LoginPageState extends State<LoginPage> {
                 // const SizedBox(height: 16.0),
                 // ...
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                   child: Row(children: [
                     Expanded(
-                      child: ElevatedButton(
+                      child: TextButton(
                         onPressed: _signup,
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: green,
+                          // foregroundColor: Colors.white,
+                          // backgroundColor: green,
                         ),
-                        child: const Text('Sign up'),
+                        child: const Text('Create an account>>'),
                       ),
                     ),
                   ]),
