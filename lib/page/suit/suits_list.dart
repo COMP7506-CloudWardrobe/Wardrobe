@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wardrobe/dao/suit_dao.dart';
 import 'package:wardrobe/page/suit/suit_detail.dart';
+import 'package:wardrobe/page/suit/suit_upload.dart';
 import 'package:wardrobe/utils/url.dart';
 import '../../model/Clothes.dart';
 import '../../model/Suit.dart';
@@ -9,9 +11,7 @@ import '../../store.dart';
 class SuitPictureList extends StatefulWidget {
   @override
   State<SuitPictureList> createState() => _SuitPictureListState();
-  String getSuitImageURL = '/get_suit_image';
-  String userIdParam = "userId";
-  String suitIdParam = "suitId";
+
   int userId;
 
   SuitPictureList({super.key, required this.userId});
@@ -22,8 +22,37 @@ class _SuitPictureListState extends State<SuitPictureList> {
 
   late List<String> images;
 
-  void _showPictureDetail(
-      BuildContext context, String imageUrl, Suit suit) {
+  void _showForm(BuildContext context, String imageUrl, Suit suit) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(children: [
+          Padding(
+              padding: EdgeInsets.all(30.0),
+              child: AspectRatio(
+                aspectRatio: 1.0, // 设置宽高比为1:1
+                child: Image.network(
+                  imageUrl, // 替换为您的图像URL
+                  fit: BoxFit.scaleDown, // 图像填充方式
+                ),
+              )),
+          ElevatedButton(
+            onPressed: () {
+              print("delete");
+              Provider.of<StoreProvider>(context, listen: false)
+                  .deleteSuit(suit);
+              SuitDao.deleteSuit(widget.userId, suit.suitId);
+              Navigator.pop(context);
+            },
+            child: Text('Delete'),
+          ),
+          const SizedBox(height: 10.0),
+        ]);
+      },
+    );
+  }
+
+  void _showPictureDetail(BuildContext context, String imageUrl, Suit suit) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -41,36 +70,40 @@ class _SuitPictureListState extends State<SuitPictureList> {
     _suitList = Provider.of<StoreProvider>(context, listen: true).getSuitList();
 
     images = _suitList
-        .map((Suit suit) => '$baseURL${widget.getSuitImageURL}'
-            '?${widget.userIdParam}=${widget.userId}'
-            '&${widget.suitIdParam}=${suit.suitId}')
+        .map((Suit suit) => getSuitImageURL(suit.suitId, widget.userId))
         .toList();
 
     return Scaffold(
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, // Number of columns in the grid
-          crossAxisSpacing: 10.0, // Spacing between columns
-          mainAxisSpacing: 10.0, // Spacing between rows
-        ),
+            crossAxisCount: 2, // Number of columns in the grid
+            crossAxisSpacing: 10.0, // Spacing between columns
+            mainAxisSpacing: 10.0, // Spacing between rows
+            childAspectRatio: 0.6),
         itemCount: images.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
               print(index);
-              _showPictureDetail(context, images[index], _suitList[index]);
+              _showForm(context, images[index], _suitList[index]);
               // ClothesDetailPage(imageUrl: images[index]);
               // _showForm(context, images[index]);
             },
             child: Image.network(
               images[index],
-              fit: BoxFit.cover,
+              fit: BoxFit.scaleDown,
             ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SuitUploadPage(),
+            ),
+          );
           // Handle add button tap here
         },
         child: Icon(Icons.add),

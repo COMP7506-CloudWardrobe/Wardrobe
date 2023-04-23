@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../utils/file_to_multipart.dart';
 import '../utils/url.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wardrobe/model/ClothesWardrobe.dart';
@@ -10,6 +12,8 @@ class ClothesDao {
   static const String getAllClothesUrl = "/wardrobe/get_all_clothes";
 
   static const String deleteClothesUrl = "/wardrobe//delete_clothes";
+
+  static const String uploadClothesUrl = "/wardrobe/upload_clothes";
 
   static Future<ClothesWardrobe> getAllClothes(int id) async {
     try {
@@ -25,7 +29,6 @@ class ClothesDao {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
 
-
         ClothesWardrobe allClothes = ClothesWardrobe(
             tops: data['tops'] == null
                 ? []
@@ -38,9 +41,9 @@ class ClothesDao {
                 : data['bottoms']
                     .map<Clothes>((json) => Clothes.fromJson(json))
                     .toList(),
-            onePieces: data['onePieces'] == null
+            outwears: data['outwears'] == null
                 ? []
-                : data['onePieces']
+                : data['outwears']
                     .map<Clothes>((json) => Clothes.fromJson(json))
                     .toList(),
             shoes: data['shoes'] == null
@@ -68,8 +71,43 @@ class ClothesDao {
     }
   }
 
-  static void deleteClothes(
-      int userId, int clothesId) async {
+  static Future<Clothes> uploadClothes(File image, int userId, int type) async {
+    try {
+      Dio dio = Dio(BaseOptions(baseUrl: baseURL));
+
+      MultipartFile imageMulti = await fileToMultipartFile(image);
+      // print(userId);
+      // print(imageMulti);
+      FormData formData = FormData.fromMap(
+          {'image': imageMulti, 'userId': userId, 'type': type});
+      Response response = await dio.post(uploadClothesUrl, data: formData);
+
+      if (response.statusCode == 200) {
+        // 请求成功，解析返回的数据
+        // print("-------test------");
+        if (response.data == null) {
+          Fluttertoast.showToast(
+              msg: '上传失败！',
+              gravity: ToastGravity.CENTER,
+              textColor: Colors.grey);
+          throw Exception('上传失败！');
+        }
+        return Clothes.fromJson(response.data);
+      } else {
+        // 请求失败，抛出异常
+        throw Exception('上传失败！！！');
+      }
+    } catch (e) {
+      // 请求异常，抛出异常
+      // Fluttertoast.showToast(
+      //     msg: '网络异常！',
+      //     gravity: ToastGravity.CENTER,
+      //     textColor: Colors.grey);
+      throw Exception('网络异常');
+    }
+  }
+
+  static void deleteClothes(int userId, int clothesId) async {
     try {
       Dio dio = Dio(BaseOptions(baseUrl: baseURL));
       Map<String, dynamic> params = {'clothesId': clothesId, 'userId': userId};

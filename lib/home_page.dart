@@ -40,9 +40,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
-      ClothesPage(
-        selectedIndex: 0,
-      ),
+      ClothesPage(),
       SuitPage(userId: widget.user.id),
       InsightPage(),
       ProfilePage(),

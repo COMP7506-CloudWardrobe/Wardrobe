@@ -24,7 +24,7 @@ class StoreProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setClothesWardrobe(ClothesWardrobe clothesWardrobe) async{
+  void setClothesWardrobe(ClothesWardrobe clothesWardrobe) async {
     _clothesWardrobe = clothesWardrobe;
     print(_clothesWardrobe);
     notifyListeners();
@@ -43,17 +43,15 @@ class StoreProvider with ChangeNotifier {
       case 1:
         return _clothesWardrobe.bottoms;
       case 2:
-        return _clothesWardrobe.onePieces;
+        return _clothesWardrobe.outwears;
       case 3:
         return _clothesWardrobe.shoes;
       case 4:
         return _clothesWardrobe.accessories;
+      case 5:
+        return _clothesWardrobe.accessories;
     }
     return null;
-  }
-
-  List<Suit> getSuitList() {
-    return _suitList;
   }
 
   void addClothes(Clothes clothes) {
@@ -66,7 +64,7 @@ class StoreProvider with ChangeNotifier {
         _clothesWardrobe.bottoms.add(clothes);
         break;
       case 2:
-        _clothesWardrobe.onePieces.add(clothes);
+        _clothesWardrobe.outwears.add(clothes);
         break;
       case 3:
         _clothesWardrobe.shoes.add(clothes);
@@ -90,7 +88,7 @@ class StoreProvider with ChangeNotifier {
             .removeWhere((element) => element.id == clothes.id);
         break;
       case 2:
-        _clothesWardrobe.onePieces
+        _clothesWardrobe.outwears
             .removeWhere((element) => element.id == clothes.id);
         break;
       case 3:
@@ -102,6 +100,20 @@ class StoreProvider with ChangeNotifier {
             .removeWhere((element) => element.id == clothes.id);
         break;
     }
+    notifyListeners();
+  }
+
+  List<Suit> getSuitList() {
+    return _suitList;
+  }
+
+  void deleteSuit(Suit suit) {
+    _suitList.removeWhere((element) => element.suitId == suit.suitId);
+    notifyListeners();
+  }
+
+  void addSuit(Suit suit) {
+    _suitList.add(suit);
     notifyListeners();
   }
 }

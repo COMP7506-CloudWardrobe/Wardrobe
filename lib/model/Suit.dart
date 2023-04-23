@@ -2,25 +2,28 @@ class Suit {
   int suitId;
   int? topId;
   int? bottomId;
-  int? onePieceId;
+  int? outwearId;
   int? shoesId;
-  int? accessoryId;
+  int? accessoryId1;
+  int? accessoryId2;
 
   Suit(
       {required this.suitId,
       this.topId,
       this.bottomId,
-      this.onePieceId,
+      this.outwearId,
       this.shoesId,
-      this.accessoryId});
+      this.accessoryId1,
+      this.accessoryId2});
 
   factory Suit.fromJson(Map<String, dynamic> json) {
     return Suit(
         suitId: json['suitId'],
         topId: json['topId'],
         bottomId: json['bottomId'],
-        onePieceId: json['onePieceId'],
+        outwearId: json['outwearId'],
         shoesId: json['shoesId'],
-        accessoryId: json['accessoryId']);
+        accessoryId1: json['accessoryId1'],
+        accessoryId2: json['accessoryId2']);
   }
 }

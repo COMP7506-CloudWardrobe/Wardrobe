@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wardrobe/dao/clothes_dao.dart';
 import 'package:wardrobe/dao/wardrobe_dao.dart';
 import 'package:wardrobe/page/clothes/clothes_list.dart';
 
@@ -28,13 +29,11 @@ class ClothTagPage extends StatefulWidget {
 }
 
 class _ClothTagPageState extends State<ClothTagPage> {
-  int type = 0;
-  double rotationAngle = 0;
 
   void _upload() {
     print('--------upload--------');
     // print(type);
-    WardrobeDao.uploadClothes(widget.image, widget.userId, type)
+    ClothesDao.uploadClothes(widget.image, widget.userId, widget.selectedIndex)
         .then((result) => {
               Provider.of<StoreProvider>(context, listen: false)
                   .addClothes(result),
@@ -46,31 +45,38 @@ class _ClothTagPageState extends State<ClothTagPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RotatedBox(
-              quarterTurns: rotationAngle ~/ 90,
-              child: Image.file(widget.image! as File),
+            AspectRatio(
+              aspectRatio: 1.0, // 设置宽高比为1:1
+              child: Image.file(
+                widget.image, // 替换为您的图像URL
+                fit: BoxFit.scaleDown, // 图像填充方式
+              ),
             ),
-            const SizedBox(height: 16),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  rotationAngle += 90;
-                });
-              },
-              child: const Text('rotate'),
-            ),
+            // RotatedBox(
+            //   quarterTurns: rotationAngle ~/ 90,
+            //   child: Image.file(widget.image! as File),
+            // ),
+            const SizedBox(height: 20),
+            // const SizedBox(height: 16),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       rotationAngle += 90;
+            //     });
+            //   },
+            //   child: const Text('rotate'),
+            // ),
             Row(
               children: [
                 const Text('Type'),
                 const SizedBox(width: 16),
                 Expanded(
                   child: DropdownButton<int>(
-                    value: type,
+                    value: widget.selectedIndex,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
@@ -81,7 +87,7 @@ class _ClothTagPageState extends State<ClothTagPage> {
                     ),
                     onChanged: (int? newValue) {
                       setState(() {
-                        type = newValue!;
+                        widget.selectedIndex = newValue!;
                       });
                     },
                     items: const <DropdownMenuItem<int>>[
@@ -95,7 +101,7 @@ class _ClothTagPageState extends State<ClothTagPage> {
                       ),
                       DropdownMenuItem(
                         value: 2,
-                        child: Text('One-Piece'),
+                        child: Text('Outwear'),
                       ),
                       DropdownMenuItem(
                         value: 3,

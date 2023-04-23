@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../model/Suit.dart';
+import '../utils/file_to_multipart.dart';
 import '../utils/url.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wardrobe/model/ClothesWardrobe.dart';
@@ -11,6 +13,8 @@ class SuitDao {
   static const String getAllSuitsUrl = "/wardrobe/get_all_suits";
 
   static const String deleteSuitUrl = "/wardrobe//delete_suit";
+
+  static const String uploadSuitUrl = "/wardrobe/upload_suit";
 
   static Future<List<Suit>> getAllSuits(int id) async {
     try {
@@ -49,10 +53,57 @@ class SuitDao {
     }
   }
 
-  static void deleteClothes(int userId, int clothesId) async {
+  static Future<Suit> uploadSuit(
+      File image, int userId, List<int?> clothesIds) async {
     try {
       Dio dio = Dio(BaseOptions(baseUrl: baseURL));
-      Map<String, dynamic> params = {'suitId': clothesId, 'userId': userId};
+
+      MultipartFile imageMulti = await fileToMultipartFile(image);
+      // print(userId);
+      // print(imageMulti);
+      FormData formData = FormData.fromMap({
+        'image': imageMulti,
+        'userId': userId,
+        'topId': clothesIds[0],
+        'bottomId': clothesIds[1],
+        'outwearId': clothesIds[2],
+        'shoesId': clothesIds[3],
+        'accessoryId1': clothesIds[4],
+        'accessoryId2': clothesIds[5]
+      });
+
+      print(formData);
+      Response response = await dio.post(uploadSuitUrl, data: formData);
+
+      if (response.statusCode == 200) {
+        // 请求成功，解析返回的数据
+        // print("-------test------");
+        if (response.data == null) {
+          Fluttertoast.showToast(
+              msg: '上传失败！',
+              gravity: ToastGravity.CENTER,
+              textColor: Colors.grey);
+          throw Exception('上传失败！');
+        }
+        return Suit.fromJson(response.data);
+      } else {
+        // 请求失败，抛出异常
+        throw Exception('上传失败！！！');
+      }
+    } catch (e) {
+      // 请求异常，抛出异常
+      // Fluttertoast.showToast(
+      //     msg: '网络异常！',
+      //     gravity: ToastGravity.CENTER,
+      //     textColor: Colors.grey);
+      throw Exception('网络异常');
+    }
+  }
+
+  static void deleteSuit(int userId, int suitId) async {
+    try {
+      Dio dio = Dio(BaseOptions(baseUrl: baseURL));
+      Map<String, dynamic> params = {'suitId': suitId, 'userId': userId};
 
       Response response = await dio.get(deleteSuitUrl, queryParameters: params);
 

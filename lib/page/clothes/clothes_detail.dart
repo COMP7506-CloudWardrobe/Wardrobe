@@ -80,8 +80,8 @@ class _ClothesDetailPageState extends State<ClothesDetailPage> {
                         print("delete");
                         Provider.of<StoreProvider>(context, listen: false)
                             .deleteClothes(widget.clothes);
-                        // ClothesDao.deleteClothes(
-                        //     widget.userId, widget.clothes.id);
+                        ClothesDao.deleteClothes(
+                            widget.userId, widget.clothes.id);
                         Navigator.pop(context);
                       }
                     },

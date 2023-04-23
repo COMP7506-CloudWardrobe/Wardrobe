@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:wardrobe/page/account/login_page.dart';
 
 import '../../dao/user_dao.dart';
 import '../../home_page.dart';
@@ -23,15 +24,15 @@ class _SignUpPageState extends State<SignUpPage> {
       _formKey.currentState!.save();
       // Perform registration logic with _username, _email, and _password
       UserDao.register(_username, _email, _password).then((user) {
-        Provider.of<StoreProvider>(context, listen: false).setUser(user);
+        // Provider.of<StoreProvider>(context, listen: false).setUser(user);
         Fluttertoast.showToast(
-            msg: '登录成功！',
+            msg: '注册成功！',
             gravity: ToastGravity.CENTER,
             textColor: Colors.grey);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(user: user),
+            builder: (context) => const LoginPage(),
           ),
         );
       });
