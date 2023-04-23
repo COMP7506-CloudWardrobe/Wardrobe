@@ -8,6 +8,7 @@ import '../../dao/clothes_dao.dart';
 import '../../dao/suit_dao.dart';
 import '../../dao/user_dao.dart';
 import '../../model/User.dart';
+import '../../utils/color.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -111,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
   // task 3: get suit list
 
   void _signup() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SignUpPage(),
@@ -122,88 +123,117 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ...
-      body: Padding(
-        padding: EdgeInsets.all(50.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('邮箱地址'),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: '请输入邮箱地址',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return '请输入邮箱地址';
-                  } else if (!isEmail(value)) {
-                    return '请输入正确的邮箱地址';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  _email = value;
-                },
-                onSaved: (value) {
-                  _email = value!;
-                },
-              ),
-              SizedBox(height: 16.0),
-              Text('密码'),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: '请输入密码',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return '请输入密码';
-                  } else if (value.length < 6) {
-                    return '密码长度应为6位或以上';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  _password = value;
-                },
-                onSaved: (value) {
-                  _password = value!;
-                },
-              ),
-              SizedBox(height: 16.0),
-              // ...
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Row(children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      child: Text('登录'),
-                    ),
-                  ),
-                ]),
-              ),
-              SizedBox(height: 16.0),
-              // ...
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Row(children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _signup,
-                      child: Text('注册'),
-                    ),
-                  ),
-                ]),
-              ),
-            ],
+        // ...
+        body: Stack(
+      children: [
+        Container(
+          height: 310,
+          decoration: const BoxDecoration(
+            // color: green,
+            image: DecorationImage(
+              image: AssetImage('assets/images/login.png'), // 设置背景图片
+              fit: BoxFit.fitWidth, // 设置背景图片的填充方式
+            ),
           ),
         ),
-      ),
-    );
+        const Padding(
+            padding: EdgeInsets.fromLTRB(50, 260, 50, 50),
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: Text.rich(
+                  TextSpan(
+                      text: 'Hello \nCloud Wardrobe :)',
+                      style: TextStyle(
+                          color: darkGreen,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28)),
+                ))),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(50.0, 330, 50, 50),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text('Email Address'),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  // decoration: const InputDecoration(
+                  //   hintText: 'Input your email address:',
+                  // ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please input your email address.';
+                    } else if (!isEmail(value)) {
+                      return 'Email address incorrect!';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _email = value;
+                  },
+                  onSaved: (value) {
+                    _email = value!;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                const Text('Password'),
+                TextFormField(
+                  obscureText: true,
+                  // decoration: const InputDecoration(
+                  //   hintText: 'Input your password:',
+                  // ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please input your password.';
+                    } else if (value.length < 6) {
+                      return 'The length of your password should be greater than 6.';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _password = value;
+                  },
+                  onSaved: (value) {
+                    _password = value!;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                // ...
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _submit,
+                        child: const Text('Log in'),
+                      ),
+                    ),
+                  ]),
+                ),
+                // const SizedBox(height: 16.0),
+                // ...
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: Row(children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _signup,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: green,
+                        ),
+                        child: const Text('Sign up'),
+                      ),
+                    ),
+                  ]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ));
   }
 }

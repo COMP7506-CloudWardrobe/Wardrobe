@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:wardrobe/dao/suit_dao.dart';
+import 'package:wardrobe/model/ClothesWardrobe.dart';
 import 'package:wardrobe/utils/url.dart';
 import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../model/Clothes.dart';
 import '../../model/Suit.dart';
 import '../../store.dart';
+import '../../utils/color.dart';
 
 class SuitUploadPage extends StatefulWidget {
   @override
@@ -20,14 +22,20 @@ class SuitUploadPage extends StatefulWidget {
 }
 
 class _SuitUploadPageState extends State<SuitUploadPage> {
-  GlobalKey _globalKey = GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
 
   late File screenshot;
 
+  late ClothesWardrobe _wardrobe;
+
   late List<Clothes> _clothesList;
+
   late int _userId;
+
   late List<String?> images = [null, null, null, null, null, null];
+
   late List<int?> selectedClothesIds = [null, null, null, null, null, null];
+
   final List<String> _addClothesCategory = [
     "Add top",
     "Add bottom",
@@ -40,8 +48,9 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
   void _submit() {}
 
   void showFormDialog(BuildContext context, int type) {
-    _clothesList = Provider.of<StoreProvider>(context, listen: false)
-        .getClothesList(type)!;
+    setState(() {
+      _clothesList = _wardrobe.getClothesList(type)!;
+    });
     List<String> clothesImages = _clothesList
         .map((clothes) => getClothesImageURL(clothes.id, _userId))
         .toList();
@@ -53,32 +62,48 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
           insetPadding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.1),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5, // 设置高度为屏幕高度的50%
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // Number of columns in the grid
-                crossAxisSpacing: 10.0, // Spacing between columns
-                mainAxisSpacing: 10.0, // Spacing between rows
-              ),
-              itemCount: clothesImages.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      images[type] = clothesImages[index];
-                      selectedClothesIds[type] = _clothesList[index].id;
-                    });
-                    // 返回图片ID并关闭弹窗
-                    Navigator.pop(context);
-                  },
-                  child: Image.network(
-                    clothesImages[index],
-                    fit: BoxFit.cover,
-                  ),
-                );
-              },
-            ),
-          ),
+              height: MediaQuery.of(context).size.height * 0.4, // 设置高度为屏幕高度的50%
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0),
+                  child: Column(children: [
+                    Expanded(
+                        // flex: 5,
+                        child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // Number of columns in the grid
+                        crossAxisSpacing: 10.0, // Spacing between columns
+                        mainAxisSpacing: 10.0, // Spacing between rows
+                      ),
+                      itemCount: clothesImages.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              images[type] = clothesImages[index];
+                              selectedClothesIds[type] = _clothesList[index].id;
+                            });
+                            // 返回图片ID并关闭弹窗
+                            Navigator.pop(context);
+                          },
+                          child: Image.network(
+                            clothesImages[index],
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    )),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          images[type] = null;
+                          selectedClothesIds[type] = null;
+                        });
+                        Navigator.pop(context); // 关闭弹窗
+                      },
+                      child: const Text('Clear'),
+                    ),
+                  ]))),
         );
       },
     );
@@ -140,72 +165,82 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
   @override
   Widget build(BuildContext context) {
     _userId = Provider.of<StoreProvider>(context, listen: false).user.id;
+    _wardrobe =
+        Provider.of<StoreProvider>(context, listen: true).clothesWardrobe;
 
     return Scaffold(
         appBar: AppBar(
           title: Text('Suit Planner'),
         ),
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0),
-            // 设置内边距
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // 上部分：top, bottom, one-piece
-                RepaintBoundary(
+        body: Container(
+          color: Colors.white,
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 上部分：top, bottom, one-piece
+                  Expanded(
+                      child: RepaintBoundary(
                     key: _globalKey,
                     child: Container(
-                        color: Colors.white,
-                        child: Expanded(
-                          child: Row(
-                            children: [
-                              // 左侧：top, bottom, shoes
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    // top
-                                    getClothesPicker(0),
-                                    Container(height: 10),
-                                    // bottom
-                                    getClothesPicker(1),
-                                    Container(height: 10),
-                                    // shoes
-                                    getClothesPicker(3),
-                                    // accessory
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-
-                              Expanded(
-                                  child: Column(children: [
-                                // 右侧：outwear, accessory1, accessory2
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          // 左侧：top, bottom, shoes
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // top
+                                getClothesPicker(0),
+                                Container(height: 10),
+                                // bottom
+                                getClothesPicker(1),
+                                Container(height: 10),
+                                // shoes
+                                getClothesPicker(3),
+                                // accessory
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          // 右侧：outwear, accessory1, accessory2
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
                                 getClothesPicker(2),
                                 Container(height: 10),
                                 getClothesPicker(4),
                                 Container(height: 10),
                                 getClothesPicker(5),
-                              ]))
-                            ],
+                              ],
+                            ),
                           ),
-                        ))),
-                Column(
-                  children: [
-                    // shoes
-                    ElevatedButton(
-                      onPressed: () {
-                        _captureAndUpload();
-                        // Navigator.pop(context);
-                      },
-                      child: const Text('Submit'),
+                        ],
+                      ),
                     ),
-                    // accessory
-                    // Expanded(child: buildImagePicker(4)),
-                  ],
-                ),
-              ],
-            )));
+                  )),
+
+                  // shoes
+                  TextButton(
+                    onPressed: () {
+                      _captureAndUpload();
+                      // Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                        foregroundColor: gold,
+                        textStyle: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('Submit'),
+                  ),
+                  // accessory
+                  // Expanded(child: buildImagePicker(4)),
+                ],
+              )),
+        ));
   }
 }

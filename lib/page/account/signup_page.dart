@@ -46,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
         title: Text('Sign Up'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(50.0),
         child: Form(
           key: _formKey,
           child: Column(

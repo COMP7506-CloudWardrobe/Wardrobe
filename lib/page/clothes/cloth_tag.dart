@@ -9,6 +9,7 @@ import 'package:wardrobe/dao/wardrobe_dao.dart';
 import 'package:wardrobe/page/clothes/clothes_list.dart';
 
 import '../../store.dart';
+import '../../utils/color.dart';
 import 'clothes_page.dart';
 
 class ClothTagPage extends StatefulWidget {
@@ -45,9 +46,9 @@ class _ClothTagPageState extends State<ClothTagPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(40,60,40,40),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AspectRatio(
               aspectRatio: 1.0, // 设置宽高比为1:1
@@ -56,20 +57,7 @@ class _ClothTagPageState extends State<ClothTagPage> {
                 fit: BoxFit.scaleDown, // 图像填充方式
               ),
             ),
-            // RotatedBox(
-            //   quarterTurns: rotationAngle ~/ 90,
-            //   child: Image.file(widget.image! as File),
-            // ),
             const SizedBox(height: 20),
-            // const SizedBox(height: 16),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     setState(() {
-            //       rotationAngle += 90;
-            //     });
-            //   },
-            //   child: const Text('rotate'),
-            // ),
             Row(
               children: [
                 const Text('Type'),
@@ -80,10 +68,10 @@ class _ClothTagPageState extends State<ClothTagPage> {
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
+                    style: const TextStyle(color: green),
                     underline: Container(
                       height: 2,
-                      color: Colors.blueAccent,
+                      color: gold,
                     ),
                     onChanged: (int? newValue) {
                       setState(() {
@@ -119,7 +107,7 @@ class _ClothTagPageState extends State<ClothTagPage> {
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: _upload,
                 child: const Text('upload'),
               ),

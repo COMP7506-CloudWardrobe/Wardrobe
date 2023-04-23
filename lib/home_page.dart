@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:wardrobe/model/ClothesWardrobe.dart';
 import 'model/User.dart';
 import '../page/clothes/clothes_page.dart';
 import '../page/suit/suit_page.dart';
 import '../page/insight/insight_page.dart';
 import '../page/profile/profile_page.dart';
-import 'package:wardrobe/dao/clothes_dao.dart';
-import 'package:wardrobe/store.dart';
-import 'package:provider/provider.dart';
+import 'utils/color.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -25,7 +22,6 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
@@ -45,24 +41,12 @@ class _HomePageState extends State<HomePage> {
       InsightPage(),
       ProfilePage(),
     ];
-    // 构建衣橱
-    // ClothesDao.getAllClothes(
-    //         Provider.of<StoreProvider>(context, listen: false).user.id)
-    //     .then((clothesWardrobe) {
-    //   Provider.of<StoreProvider>(context, listen: false)
-    //       .setClothesWardrobe(clothesWardrobe);
-    //
-    //   _widgetOptions = <Widget>[
-    //     ClothesPage(),
-    //     SuitPage(),
-    //     InsightPage(),
-    //     ProfilePage(),
-    //   ];
-    // });
 
     return Scaffold(
       body: widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: green,
+        selectedItemColor: gold,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -83,7 +67,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
       ),
     );

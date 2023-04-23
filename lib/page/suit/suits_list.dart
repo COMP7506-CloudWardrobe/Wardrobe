@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wardrobe/dao/suit_dao.dart';
 import 'package:wardrobe/page/suit/suit_detail.dart';
 import 'package:wardrobe/page/suit/suit_upload.dart';
+import 'package:wardrobe/utils/color.dart';
 import 'package:wardrobe/utils/url.dart';
 import '../../model/Clothes.dart';
 import '../../model/Suit.dart';
@@ -107,7 +108,7 @@ class _SuitPictureListState extends State<SuitPictureList> {
           // Handle add button tap here
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        backgroundColor: green,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
