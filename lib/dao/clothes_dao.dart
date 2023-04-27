@@ -24,9 +24,6 @@ class ClothesDao {
       Response response =
           await dio.get(getAllClothesUrl, queryParameters: params);
 
-      // print('Response ${response.statusCode}');
-      print(response.data);
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
 
@@ -59,15 +56,9 @@ class ClothesDao {
                     .toList());
         return allClothes;
       } else {
-        // 请求失败，抛出异常
         throw Exception('请求失败');
       }
     } catch (e) {
-      // 请求异常，抛出异常
-      // Fluttertoast.showToast(
-      //     msg: '网络异常！',
-      //     gravity: ToastGravity.CENTER,
-      //     textColor: Colors.grey);
       throw Exception('异常');
     }
   }

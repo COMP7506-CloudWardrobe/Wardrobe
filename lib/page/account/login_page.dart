@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:wardrobe/home_page.dart';
 import 'package:wardrobe/store.dart';
 import '../../dao/clothes_dao.dart';
+import '../../dao/share_dao.dart';
 import '../../dao/suit_dao.dart';
 import '../../dao/user_dao.dart';
 import '../../model/User.dart';
@@ -88,18 +89,30 @@ class _LoginPageState extends State<LoginPage> {
                 .setSuitList(suitList);
             print(suitList);
 
-            Fluttertoast.showToast(
-                msg: 'Hello ${user.userName}!',
-                gravity: ToastGravity.CENTER,
-                textColor: gold,
-                backgroundColor: Colors.white);
+            ShareDao.getAllShares().then((shareList) {
+              Provider.of<StoreProvider>(context, listen: false)
+                  .setAllShares(shareList);
+              print(shareList);
 
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(user: user),
-              ),
-            );
+              ShareDao.getUserShares(user.id).then((shareList) {
+                Provider.of<StoreProvider>(context, listen: false)
+                    .setAllMyShares(shareList);
+                print(shareList);
+
+                Fluttertoast.showToast(
+                    msg: 'Hello ${user.userName}!',
+                    gravity: ToastGravity.CENTER,
+                    textColor: gold,
+                    backgroundColor: Colors.white);
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(user: user),
+                  ),
+                );
+              });
+            });
           });
         });
       });
@@ -123,12 +136,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double picHeight = MediaQuery.of(context).size.height * 0.35;
     return Scaffold(
         // ...
         body: Stack(
       children: [
         Container(
-          height: 310,
+          height: MediaQuery.of(context).size.height * 0.35,
           decoration: const BoxDecoration(
             // color: green,
             image: DecorationImage(
@@ -137,9 +151,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        const Padding(
-            padding: EdgeInsets.fromLTRB(50, 260, 50, 50),
-            child: Align(
+        Padding(
+            padding: EdgeInsets.fromLTRB(50, picHeight - 35, 50, 50),
+            child: const Align(
                 alignment: Alignment.topLeft,
                 child: Text.rich(
                   TextSpan(
@@ -150,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 28)),
                 ))),
         Padding(
-          padding: const EdgeInsets.fromLTRB(50.0, 330, 50, 50),
+          padding: EdgeInsets.fromLTRB(50.0, picHeight + 20, 50, 50),
           child: Form(
             key: _formKey,
             child: Column(
@@ -222,9 +236,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextButton(
                         onPressed: _signup,
                         style: ElevatedButton.styleFrom(
-                          // foregroundColor: Colors.white,
-                          // backgroundColor: green,
-                        ),
+                            // foregroundColor: Colors.white,
+                            // backgroundColor: green,
+                            ),
                         child: const Text('Create an account>>'),
                       ),
                     ),

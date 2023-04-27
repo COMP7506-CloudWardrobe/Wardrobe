@@ -55,23 +55,6 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
         _showUploadForm(context);
       }
     });
-
-    // if (pickedFile != null) {
-    //   _image = File(pickedFile.path);
-    //   print(pickedFile.path);
-    //   // _showUploadForm(context);
-    //   // ignore: use_build_context_synchronously
-    //   // Navigator.push(
-    //   //   context,
-    //   //   MaterialPageRoute(
-    //   //     builder: (context) => ClothTagPage(
-    //   //       image: _image,
-    //   //       userId: widget.userId,
-    //   //       selectedIndex: widget.selectedIndex,
-    //   //     ),
-    //   //   ),
-    //   // );
-    // }
   }
 
   void _upload() {

@@ -3,6 +3,7 @@ import 'package:wardrobe/model/ClothesWardrobe.dart';
 import 'package:wardrobe/model/User.dart';
 import 'package:wardrobe/model/Clothes.dart';
 
+import 'model/Share.dart';
 import 'model/Suit.dart';
 
 // 存储全局变量的provider，现在只有存储登录后的用户信息
@@ -19,6 +20,14 @@ class StoreProvider with ChangeNotifier {
 
   List<Suit> get suitList => _suitList;
 
+  late List<Share> _allShares;
+
+  List<Share> get allShares => _allShares;
+
+  late List<Share> _allMyShares;
+
+  List<Share> get allMyShares => _allMyShares;
+
   void setUser(User user) {
     _user = user;
     notifyListeners();
@@ -33,6 +42,18 @@ class StoreProvider with ChangeNotifier {
   void setSuitList(List<Suit> suitList) {
     _suitList = suitList;
     print(_suitList);
+    notifyListeners();
+  }
+
+  void setAllShares(List<Share> shareList) {
+    _allShares = shareList;
+    print(_allShares);
+    notifyListeners();
+  }
+
+  void setAllMyShares(List<Share> shareList) {
+    _allMyShares = shareList;
+    print(_allMyShares);
     notifyListeners();
   }
 
@@ -58,19 +79,19 @@ class StoreProvider with ChangeNotifier {
     int type = clothes.type;
     switch (type) {
       case 0:
-        _clothesWardrobe.tops.add(clothes);
+        _clothesWardrobe.tops.insert(0, clothes);
         break;
       case 1:
-        _clothesWardrobe.bottoms.add(clothes);
+        _clothesWardrobe.bottoms.insert(0, clothes);
         break;
       case 2:
-        _clothesWardrobe.outwears.add(clothes);
+        _clothesWardrobe.outwears.insert(0, clothes);
         break;
       case 3:
-        _clothesWardrobe.shoes.add(clothes);
+        _clothesWardrobe.shoes.insert(0, clothes);
         break;
       case 4:
-        _clothesWardrobe.accessories.add(clothes);
+        _clothesWardrobe.accessories.insert(0, clothes);
         break;
     }
     notifyListeners();
@@ -107,13 +128,29 @@ class StoreProvider with ChangeNotifier {
     return _suitList;
   }
 
+  List<Share> getShareList() {
+    // notifyListeners();
+    return _allShares;
+  }
+
+  List<Share> getMyShareList() {
+    // notifyListeners();
+    return _allMyShares;
+  }
+
   void deleteSuit(Suit suit) {
     _suitList.removeWhere((element) => element.suitId == suit.suitId);
     notifyListeners();
   }
 
   void addSuit(Suit suit) {
-    _suitList.add(suit);
+    _suitList.insert(0, suit);
+    notifyListeners();
+  }
+
+  void addShare(Share share) {
+    _allShares.insert(0, share);
+    _allMyShares.insert(0, share);
     notifyListeners();
   }
 }

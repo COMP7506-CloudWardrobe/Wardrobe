@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wardrobe/dao/clothes_dao.dart';
-import 'package:wardrobe/dao/wardrobe_dao.dart';
+import 'package:wardrobe/dao/share_dao.dart';
 import 'package:wardrobe/page/clothes/clothes_list.dart';
 
 import '../../store.dart';

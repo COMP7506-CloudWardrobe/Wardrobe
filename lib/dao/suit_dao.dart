@@ -7,8 +7,6 @@ import '../utils/color.dart';
 import '../utils/file_to_multipart.dart';
 import '../utils/url.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:wardrobe/model/ClothesWardrobe.dart';
-import 'package:wardrobe/model/Clothes.dart';
 
 class SuitDao {
   static const String getAllSuitsUrl = "/wardrobe/get_all_suits";
@@ -25,10 +23,6 @@ class SuitDao {
       Response response =
           await dio.get(getAllSuitsUrl, queryParameters: params);
 
-      // print('Response ${response.statusCode}');
-      print(response.data);
-      print('!!!');
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
 
@@ -40,15 +34,9 @@ class SuitDao {
 
         return allSuits;
       } else {
-        // 请求失败，抛出异常
         throw Exception('请求失败');
       }
     } catch (e) {
-      // 请求异常，抛出异常
-      // Fluttertoast.showToast(
-      //     msg: '网络异常！',
-      //     gravity: ToastGravity.CENTER,
-      //     textColor: Colors.grey);
       print(e.toString());
       throw Exception('异常');
     }
@@ -60,8 +48,7 @@ class SuitDao {
       Dio dio = Dio(BaseOptions(baseUrl: baseURL));
 
       MultipartFile imageMulti = await fileToMultipartFile(image);
-      // print(userId);
-      // print(imageMulti);
+
       FormData formData = FormData.fromMap({
         'image': imageMulti,
         'userId': userId,
@@ -73,12 +60,9 @@ class SuitDao {
         'accessoryId2': clothesIds[5]
       });
 
-      print(formData);
       Response response = await dio.post(uploadSuitUrl, data: formData);
 
       if (response.statusCode == 200) {
-        // 请求成功，解析返回的数据
-        // print("-------test------");
         Fluttertoast.showToast(
             msg: 'Upload successfully!',
             gravity: ToastGravity.CENTER,
@@ -97,11 +81,6 @@ class SuitDao {
         throw Exception('上传失败！！！');
       }
     } catch (e) {
-      // 请求异常，抛出异常
-      // Fluttertoast.showToast(
-      //     msg: '网络异常！',
-      //     gravity: ToastGravity.CENTER,
-      //     textColor: Colors.grey);
       throw Exception('网络异常');
     }
   }

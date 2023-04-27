@@ -45,8 +45,6 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
     "Add accessory2"
   ];
 
-  void _submit() {}
-
   void showFormDialog(BuildContext context, int type) {
     setState(() {
       _clothesList = _wardrobe.getClothesList(type)!;
@@ -83,7 +81,6 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
                               images[type] = clothesImages[index];
                               selectedClothesIds[type] = _clothesList[index].id;
                             });
-                            // 返回图片ID并关闭弹窗
                             Navigator.pop(context);
                           },
                           child: Image.network(
@@ -126,7 +123,7 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                        Icon(
+                        const Icon(
                           Icons.add_a_photo,
                           size: 36,
                         ),
