@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wardrobe/dao/suit_dao.dart';
 import 'package:wardrobe/model/ClothesWardrobe.dart';
@@ -57,51 +59,61 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          insetPadding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.1),
-          child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4, // 设置高度为屏幕高度的50%
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0),
-                  child: Column(children: [
-                    Expanded(
-                        // flex: 5,
-                        child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of columns in the grid
-                        crossAxisSpacing: 10.0, // Spacing between columns
-                        mainAxisSpacing: 10.0, // Spacing between rows
+            insetPadding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.1),
+            child: SizedBox(
+                height:
+                    MediaQuery.of(context).size.height * 0.4, // 设置高度为屏幕高度的50%
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0),
+                    child: Column(children: [
+                      _clothesList.isNotEmpty
+                          ? Expanded(
+                              // flex: 5,
+                              child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount:
+                                    3, // Number of columns in the grid
+                                crossAxisSpacing:
+                                    10.0, // Spacing between columns
+                                mainAxisSpacing: 10.0, // Spacing between rows
+                              ),
+                              itemCount: clothesImages.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      images[type] = clothesImages[index];
+                                      selectedClothesIds[type] =
+                                          _clothesList[index].id;
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: Image.network(
+                                    clothesImages[index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              },
+                            ))
+                          : Expanded(
+                              child: Container(
+                                  color: Colors.white,
+                                  child: const Align(
+                                      alignment: Alignment.center,
+                                      child: Text('Nothing here :)')))),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            images[type] = null;
+                            selectedClothesIds[type] = null;
+                          });
+                          Navigator.pop(context); // 关闭弹窗
+                        },
+                        child: const Text('Clear'),
                       ),
-                      itemCount: clothesImages.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              images[type] = clothesImages[index];
-                              selectedClothesIds[type] = _clothesList[index].id;
-                            });
-                            Navigator.pop(context);
-                          },
-                          child: Image.network(
-                            clothesImages[index],
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    )),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          images[type] = null;
-                          selectedClothesIds[type] = null;
-                        });
-                        Navigator.pop(context); // 关闭弹窗
-                      },
-                      child: const Text('Clear'),
-                    ),
-                  ]))),
-        );
+                    ]))));
       },
     );
   }
@@ -150,12 +162,32 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
   }
 
   void _captureAndUpload() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       File image = await captureScreenshot();
       SuitDao.uploadSuit(image, _userId, selectedClothesIds).then((suit) {
         Provider.of<StoreProvider>(context, listen: false).addSuit(suit);
         Navigator.pop(context);
       });
+    });
+  }
+
+  void randomOutfit() {
+    setState(() {
+      for (int type = 0; type < selectedClothesIds.length; type++) {
+        List<Clothes>? tmpClothesList = _wardrobe.getClothesList(type);
+        if (tmpClothesList != null && tmpClothesList.isNotEmpty) {
+          int random = Random().nextInt(tmpClothesList.length);
+          selectedClothesIds[type] = tmpClothesList[random].id;
+          images[type] = getClothesImageURL(selectedClothesIds[type]!, _userId);
+        }
+      }
+    });
+  }
+
+  void clear() {
+    setState(() {
+      selectedClothesIds = [null, null, null, null, null, null];
+      images = [null, null, null, null, null, null];
     });
   }
 
@@ -166,15 +198,14 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
         Provider.of<StoreProvider>(context, listen: true).clothesWardrobe;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Suit Planner'),
-        ),
-        body: Container(
+      appBar: AppBar(
+        title: const Text('Suit Planner'),
+      ),
+      body: Container(
           color: Colors.white,
           child: Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 40.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 上部分：top, bottom, one-piece
                   Expanded(
@@ -223,21 +254,41 @@ class _SuitUploadPageState extends State<SuitUploadPage> {
                   )),
 
                   // shoes
-                  TextButton(
-                    onPressed: () {
-                      _captureAndUpload();
-                      // Navigator.pop(context);
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor: gold,
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    child: const Text('Submit'),
-                  ),
+                  Stack(children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () {
+                            _captureAndUpload();
+                            // Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                              foregroundColor: gold,
+                              textStyle: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          child: const Text('Submit'),
+                        )),
+                    Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () => clear(),
+                                icon: const Icon(FontAwesomeIcons.timesCircle,size: 20,),
+                                color: green,
+                              ),
+                              IconButton(
+                                onPressed: () => randomOutfit(),
+                                icon: const Icon(FontAwesomeIcons.shuffle,size: 20,),
+                                color: green,
+                              )
+                            ]))
+                  ]),
                   // accessory
                   // Expanded(child: buildImagePicker(4)),
                 ],
-              )),
-        ));
+              ))),
+    );
   }
 }

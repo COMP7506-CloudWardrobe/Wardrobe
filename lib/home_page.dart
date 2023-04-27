@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'model/User.dart';
 import '../page/clothes/clothes_page.dart';
 import '../page/suit/suit_page.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = <Widget>[
       ClothesPage(),
-      SuitPage(userId: widget.user.id),
+      SuitPage(),
       InsightPage(),
       ProfilePage(),
     ];
@@ -50,15 +51,16 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
+            icon: Icon(FontAwesomeIcons.shirt),
             label: 'Clothes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Suit',
+
+            icon: Icon(FontAwesomeIcons.blackTie),
+            label: 'Outfits',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.lightbulb),
+            icon: Icon(FontAwesomeIcons.lightbulb),
             label: 'Insight',
           ),
           BottomNavigationBarItem(

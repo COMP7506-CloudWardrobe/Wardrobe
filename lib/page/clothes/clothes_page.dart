@@ -52,8 +52,6 @@ class _ClothesPageState extends State<ClothesPage> {
 
   @override
   Widget build(BuildContext context) {
-    // _wardrobe =
-    //     Provider.of<StoreProvider>(context, listen: true).clothesWardrobe;
     _user = Provider.of<StoreProvider>(context, listen: false).user;
 
     _widgetOptions = [
@@ -68,7 +66,7 @@ class _ClothesPageState extends State<ClothesPage> {
       appBar: AppBar(
         title: Text(_clothesCategory[_selectedIndex]),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: const Icon(Icons.menu),
           onPressed: _toggleSideNav,
         ),
       ),

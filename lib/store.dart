@@ -28,6 +28,10 @@ class StoreProvider with ChangeNotifier {
 
   List<Share> get allMyShares => _allMyShares;
 
+  late List<Share> _collections;
+
+  List<Share> get collections => _allMyShares;
+
   void setUser(User user) {
     _user = user;
     notifyListeners();
@@ -54,6 +58,11 @@ class StoreProvider with ChangeNotifier {
   void setAllMyShares(List<Share> shareList) {
     _allMyShares = shareList;
     print(_allMyShares);
+    notifyListeners();
+  }
+
+  void setCollections(List<Share> collections) {
+    _collections = collections;
     notifyListeners();
   }
 
@@ -129,8 +138,11 @@ class StoreProvider with ChangeNotifier {
   }
 
   List<Share> getShareList() {
-    // notifyListeners();
     return _allShares;
+  }
+
+  List<Share> getCollections() {
+    return _collections;
   }
 
   List<Share> getMyShareList() {
@@ -151,6 +163,22 @@ class StoreProvider with ChangeNotifier {
   void addShare(Share share) {
     _allShares.insert(0, share);
     _allMyShares.insert(0, share);
+    notifyListeners();
+  }
+
+  void deleteShare(Share share) {
+    _allShares.removeWhere((element) => element.shareId == share.shareId);
+    _allMyShares.removeWhere((element) => element.shareId == share.shareId);
+    notifyListeners();
+  }
+
+  void collect(Share share) {
+    _collections.insert(0, share);
+    notifyListeners();
+  }
+
+  void deleteCollect(int shareId) {
+    _collections.removeWhere((element) => element.shareId == shareId);
     notifyListeners();
   }
 }

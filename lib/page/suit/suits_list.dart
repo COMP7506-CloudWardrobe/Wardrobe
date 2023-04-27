@@ -77,28 +77,34 @@ class _SuitPictureListState extends State<SuitPictureList> {
         .toList();
 
     return Scaffold(
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Number of columns in the grid
-            crossAxisSpacing: 10.0, // Spacing between columns
-            mainAxisSpacing: 10.0, // Spacing between rows
-            childAspectRatio: 0.6),
-        itemCount: images.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              print(index);
-              _showForm(context, images[index], _suitList[index]);
-              // ClothesDetailPage(imageUrl: images[index]);
-              // _showForm(context, images[index]);
-            },
-            child: Image.network(
-              images[index],
-              fit: BoxFit.scaleDown,
-            ),
-          );
-        },
-      ),
+      body: _suitList.isNotEmpty
+          ? GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Number of columns in the grid
+                  crossAxisSpacing: 10.0, // Spacing between columns
+                  mainAxisSpacing: 10.0, // Spacing between rows
+                  childAspectRatio: 0.6),
+              itemCount: images.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    print(index);
+                    _showForm(context, images[index], _suitList[index]);
+                    // ClothesDetailPage(imageUrl: images[index]);
+                    // _showForm(context, images[index]);
+                  },
+                  child: Image.network(
+                    images[index],
+                    fit: BoxFit.scaleDown,
+                  ),
+                );
+              },
+            )
+          : Container(
+              color: Colors.white,
+              child: const Align(
+                  alignment: Alignment.center,
+                  child: Text('Create your first outfit!'))),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

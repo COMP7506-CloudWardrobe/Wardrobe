@@ -29,8 +29,6 @@ class ShareDao {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
 
-        print(response.data.toString());
-
         List<Share> allShares = data['shareList']
             .map<Share>(
                 (json) => Share.fromJson((json) as Map<String, dynamic>))
@@ -55,8 +53,6 @@ class ShareDao {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.toString());
-
-        print(response.data.toString());
 
         List<Share> allShares = data['shareList']
             .map<Share>(

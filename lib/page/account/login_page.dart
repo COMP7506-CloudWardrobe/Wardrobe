@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:wardrobe/dao/collect_dao.dart';
 import 'package:wardrobe/home_page.dart';
 import 'package:wardrobe/store.dart';
 import '../../dao/clothes_dao.dart';
@@ -87,30 +88,32 @@ class _LoginPageState extends State<LoginPage> {
           SuitDao.getAllSuits(user.id).then((suitList) {
             Provider.of<StoreProvider>(context, listen: false)
                 .setSuitList(suitList);
-            print(suitList);
 
             ShareDao.getAllShares().then((shareList) {
               Provider.of<StoreProvider>(context, listen: false)
                   .setAllShares(shareList);
-              print(shareList);
 
               ShareDao.getUserShares(user.id).then((shareList) {
                 Provider.of<StoreProvider>(context, listen: false)
                     .setAllMyShares(shareList);
-                print(shareList);
 
-                Fluttertoast.showToast(
-                    msg: 'Hello ${user.userName}!',
-                    gravity: ToastGravity.CENTER,
-                    textColor: gold,
-                    backgroundColor: Colors.white);
+                CollectDao.getCollections(user.id).then((collections) {
+                  Provider.of<StoreProvider>(context, listen: false)
+                      .setCollections(collections);
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(user: user),
-                  ),
-                );
+                  Fluttertoast.showToast(
+                      msg: 'Hello ${user.userName}!',
+                      gravity: ToastGravity.CENTER,
+                      textColor: gold,
+                      backgroundColor: Colors.white);
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(user: user),
+                    ),
+                  );
+                });
               });
             });
           });
@@ -141,115 +144,115 @@ class _LoginPageState extends State<LoginPage> {
         // ...
         resizeToAvoidBottomInset: false,
         body: Stack(
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.35,
-          decoration: const BoxDecoration(
-            // color: green,
-            image: DecorationImage(
-              image: AssetImage('assets/images/login.png'), // 设置背景图片
-              fit: BoxFit.fitWidth, // 设置背景图片的填充方式
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.35,
+              decoration: const BoxDecoration(
+                // color: green,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/login.png'), // 设置背景图片
+                  fit: BoxFit.fitWidth, // 设置背景图片的填充方式
+                ),
+              ),
             ),
-          ),
-        ),
-        Padding(
-            padding: EdgeInsets.fromLTRB(50, picHeight - 35, 50, 50),
-            child: const Align(
-                alignment: Alignment.topLeft,
-                child: Text.rich(
-                  TextSpan(
-                      text: 'Hello \nCloud Wardrobe :)',
-                      style: TextStyle(
-                          color: darkGreen,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28)),
-                ))),
-        Padding(
-          padding: EdgeInsets.fromLTRB(50.0, picHeight + 20, 50, 50),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text('Email'),
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  // decoration: const InputDecoration(
-                  //   hintText: 'Input your email address:',
-                  // ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please input your email.';
-                    } else if (!isEmail(value)) {
-                      return 'Email incorrect!';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _email = value;
-                  },
-                  onSaved: (value) {
-                    _email = value!;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                const Text('Password'),
-                TextFormField(
-                  obscureText: true,
-                  // decoration: const InputDecoration(
-                  //   hintText: 'Input your password:',
-                  // ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please input your password.';
-                    } else if (value.length < 6) {
-                      return 'The length of your password should be greater than 6.';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _password = value;
-                  },
-                  onSaved: (value) {
-                    _password = value!;
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                // ...
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _submit,
-                        child: const Text('Log in'),
-                      ),
+            Padding(
+                padding: EdgeInsets.fromLTRB(50, picHeight - 35, 50, 50),
+                child: const Align(
+                    alignment: Alignment.topLeft,
+                    child: Text.rich(
+                      TextSpan(
+                          text: 'Hello \nCloud Wardrobe :)',
+                          style: TextStyle(
+                              color: darkGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28)),
+                    ))),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50.0, picHeight + 20, 50, 50),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text('Email'),
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      // decoration: const InputDecoration(
+                      //   hintText: 'Input your email address:',
+                      // ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please input your email.';
+                        } else if (!isEmail(value)) {
+                          return 'Email incorrect!';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        _email = value;
+                      },
+                      onSaved: (value) {
+                        _email = value!;
+                      },
                     ),
-                  ]),
-                ),
-                // const SizedBox(height: 16.0),
-                // ...
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  child: Row(children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: _signup,
-                        style: ElevatedButton.styleFrom(
-                            // foregroundColor: Colors.white,
-                            // backgroundColor: green,
-                            ),
-                        child: const Text('Create an account>>'),
-                      ),
+                    const SizedBox(height: 16.0),
+                    const Text('Password'),
+                    TextFormField(
+                      obscureText: true,
+                      // decoration: const InputDecoration(
+                      //   hintText: 'Input your password:',
+                      // ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please input your password.';
+                        } else if (value.length < 6) {
+                          return 'The length of your password should be greater than 6.';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        _password = value;
+                      },
+                      onSaved: (value) {
+                        _password = value!;
+                      },
                     ),
-                  ]),
+                    const SizedBox(height: 16.0),
+                    // ...
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: _submit,
+                            child: const Text('Log in'),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    // const SizedBox(height: 16.0),
+                    // ...
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Row(children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: _signup,
+                            style: ElevatedButton.styleFrom(
+                                // foregroundColor: Colors.white,
+                                // backgroundColor: green,
+                                ),
+                            child: const Text('Create an account>>'),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
-    ));
+          ],
+        ));
   }
 }

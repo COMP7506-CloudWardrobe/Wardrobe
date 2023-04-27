@@ -10,7 +10,6 @@ import '../../dao/clothes_dao.dart';
 import '../../model/Clothes.dart';
 import '../../store.dart';
 import '../../utils/color.dart';
-import 'clothes_detail.dart';
 import '../../utils/url.dart';
 
 class ClothesPictureList extends StatefulWidget {
@@ -42,8 +41,6 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
   @override
   void initState() {
     super.initState();
-    // _requestPermissions();
-    // _image = null;
   }
 
   Future<void> _selectImage() async {
@@ -58,8 +55,6 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
   }
 
   void _upload() {
-    print('--------upload--------');
-    // print(type);
     ClothesDao.uploadClothes(_image, widget.userId, _uploadTypeIndex)
         .then((result) => {
               Provider.of<StoreProvider>(context, listen: false)
@@ -208,35 +203,43 @@ class _ClothesPictureListState extends State<ClothesPictureList> {
     _uploadTypeIndex = widget.selectedIndex;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0), // 设置内边距
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Number of columns in the grid
-              crossAxisSpacing: 10.0, // Spacing between columns
-              mainAxisSpacing: 10.0 // Spacing between rows
+      body: _clothesList.isNotEmpty
+          ? Padding(
+              padding:
+                  const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 40.0), // 设置内边距
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Number of columns in the grid
+                    crossAxisSpacing: 10.0, // Spacing between columns
+                    mainAxisSpacing: 10.0 // Spacing between rows
+                    ),
+                itemCount: images.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      print(index);
+                      // _showPictureDetail(context, images[index], _clothesList[index]);
+                      // ClothesDetailPage(imageUrl: images[index]);
+                      _showDeleteForm(
+                          context, images[index], _clothesList[index]);
+                    },
+                    child: Image.network(
+                      images[index],
+                      fit: BoxFit.scaleDown,
+                    ),
+                  );
+                },
               ),
-          itemCount: images.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                print(index);
-                // _showPictureDetail(context, images[index], _clothesList[index]);
-                // ClothesDetailPage(imageUrl: images[index]);
-                _showDeleteForm(context, images[index], _clothesList[index]);
-              },
-              child: Image.network(
-                images[index],
-                fit: BoxFit.scaleDown,
-              ),
-            );
-          },
-        ),
-      ),
+            )
+          : Container(
+              color: Colors.white,
+              child: const Align(
+                  alignment: Alignment.center,
+                  child: Text('Upload your first clothes!'))),
       floatingActionButton: FloatingActionButton(
         onPressed: _selectImage,
-        child: Icon(Icons.camera_alt),
         backgroundColor: green,
+        child: const Icon(Icons.camera_alt),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
