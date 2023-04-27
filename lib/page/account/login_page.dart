@@ -139,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
     double picHeight = MediaQuery.of(context).size.height * 0.35;
     return Scaffold(
         // ...
+        resizeToAvoidBottomInset: false,
         body: Stack(
       children: [
         Container(
